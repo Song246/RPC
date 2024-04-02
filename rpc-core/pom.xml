@@ -3,20 +3,15 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.gs</groupId>
-  <artifactId>rpc-provider</artifactId>
+  <artifactId>rpc-core</artifactId>
   <version>1.0-SNAPSHOT</version>
 
 
   <dependencies>
     <dependency>
-      <groupId>org.gs</groupId>
-      <artifactId>rpc-core</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.gs</groupId>
-      <artifactId>rpc-common</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-core</artifactId>
+      <version>4.5.1</version>
     </dependency>
     <dependency>
       <groupId>cn.hutool</groupId>
@@ -27,7 +22,18 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>1.18.30</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.4.14</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>RELEASE</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
-
 </project>
