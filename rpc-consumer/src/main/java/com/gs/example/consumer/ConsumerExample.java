@@ -40,6 +40,9 @@ public class ConsumerExample {
             System.out.println("user == null");
         }
 
+        long number = userService.getNumber();  // 代理返回的是1，userService内的默认方法返回的是0，最终打印1，说明代理和mock数据成功
+        System.out.println(" 代理 mock 数据："+number);
+
 
     }
 }

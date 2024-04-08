@@ -18,4 +18,15 @@ public interface UserService {
     * @Date: 2024/4/1
     */
     User getUser(User user);
+
+
+    /**
+    * 获取数字
+    * @Param: []
+    * @return: short
+    * @Date: 2024/4/8
+    */
+    default short getNumber() {
+        return 0;
+    }
 }
