@@ -1,5 +1,8 @@
 package com.gs.rpc.proxy;
 
+import com.gs.rpc.RpcApplication;
+import com.gs.rpc.config.RpcConfig;
+
 import java.lang.reflect.Proxy;
 
 /**
@@ -18,6 +21,10 @@ public class ServiceProxyFactory {
     * @Date: 2024/4/2
     */
     public static <T> T getProxy(Class<T> serviceClass) {
+        // 启动mock模拟
+        if (RpcApplication.getRpcConfig().isMock()) {
+            return getMockProxy(serviceClass);
+        }
         return (T) Proxy.newProxyInstance(
                 serviceClass.getClassLoader(),
                 new Class[]{serviceClass},
