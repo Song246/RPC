@@ -15,13 +15,13 @@ import java.lang.reflect.Proxy;
 public class ServiceProxyFactory {
 
     /**
-    * 根据服务类获取代理对象
+    * 根据服务类接口获取代理对象（不同接口对应不同rpc服务）
     * @Param: [serviceClass]
     * @return: T
     * @Date: 2024/4/2
     */
     public static <T> T getProxy(Class<T> serviceClass) {
-        // 启动mock模拟
+        // 启动mock模拟,返回Mock代理对象， 返回调用时返回mock的值
         if (RpcApplication.getRpcConfig().isMock()) {
             return getMockProxy(serviceClass);
         }
@@ -38,7 +38,6 @@ public class ServiceProxyFactory {
     * @return: T
     * @Date: 2024/4/8
     */
-
     public static <T> T getMockProxy(Class<T> serviceClass) {
         return (T) Proxy.newProxyInstance(
                 serviceClass.getClassLoader(),

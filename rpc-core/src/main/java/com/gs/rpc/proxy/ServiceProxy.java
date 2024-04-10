@@ -2,10 +2,12 @@ package com.gs.rpc.proxy;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import com.gs.rpc.RpcApplication;
 import com.gs.rpc.model.RpcRequest;
 import com.gs.rpc.model.RpcResponse;
 import com.gs.rpc.serializer.JdkSerializer;
 import com.gs.rpc.serializer.Serializer;
+import com.gs.rpc.serializer.SerializerFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -28,8 +30,10 @@ public class ServiceProxy implements InvocationHandler{
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         // 指定序列化器
-        Serializer serializer = new JdkSerializer();
-
+//                Serializer serializer = new JdkSerializer();  // 硬编码指定序列化器
+        // 采用动态代理加载配置类的序列化器
+        final Serializer serializer = SerializerFactory.getInstance(RpcApplication.getRpcConfig().getSerializer());
+        System.out.println("序列化器："+serializer.getClass());
         // 构造请求RpcReq,RPC的输入输出都是RPC形式
         RpcRequest rpcRequest = RpcRequest.builder()
                 .serviceName(method.getDeclaringClass().getName())
@@ -39,15 +43,17 @@ public class ServiceProxy implements InvocationHandler{
                 .build();
 
         try{
+            // 序列化
             byte[] bodyBytes = serializer.serialize(rpcRequest);
-
+            // 发送请求
             // 将构造的的RpcReq进行发送到服务器并获取返回结果
             //TODO: 地址被硬编码，注册中心和服务发现机制解决
             try (HttpResponse httpResponse = HttpRequest.post("http://localhost:8080")
                     .body(bodyBytes)
                     .execute()) {
-                byte[] result = httpResponse.bodyBytes();
 
+                // 获取响应的数据
+                byte[] result = httpResponse.bodyBytes();
                 // 反序列化
                 RpcResponse rpcResponse = serializer.deserialize(result, RpcResponse.class);
                 return rpcResponse.getData();

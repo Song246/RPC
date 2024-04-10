@@ -19,7 +19,13 @@ public interface Serializer {
     */
     <T> byte[] serialize(T object) throws IOException;
 
-    <T> T deserialize(byte[] bytes,Class<T> type) throws IOException;
+    /**
+    * 反序列化
+    * @Param: [bytes, tClass]
+    * @return: T
+    * @Date: 2024/4/10
+    */
+    <T> T deserialize(byte[] bytes, Class<T> tClass) throws IOException;
 
 
 }
