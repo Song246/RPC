@@ -15,10 +15,10 @@ import com.gs.rpc.server.VertxHttpServer;
  **/
 public class ProviderExample {
     public static void main(String[] args) {
-        // RPC 框架初始化
+        // RPC 框架初始化,加载配置文件
         RpcApplication.init();
 
-        // 注册服务   key为接口名称 com.gs.example.common.service.UserService    val为实现类calss如class com.gs.example.provider.UserServiceImpl
+        // 注册服务   key为接口名称 com.gs.example.common.service.UserService,消费者通过实现类获取val的实现类    val为实现类calss如class com.gs.example.provider.UserServiceImpl
         LocalRegistry.register(UserService.class.getName(), UserServiceImpl.class);
         // 启动 服务器
         HttpServer server = new VertxHttpServer();
