@@ -103,7 +103,7 @@ public class SpiLoader {
     }
 
     /**
-    * 加载某个类型
+    * 加载某个类型，resources下面的读取
     * @Param: [loadClass]
     * @return: java.util.Map<java.lang.String,java.lang.Class<?>>
     * @Date: 2024/4/9
