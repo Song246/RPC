@@ -14,6 +14,7 @@ import com.gs.rpc.registry.RegistryFactory;
 import com.gs.rpc.serializer.JdkSerializer;
 import com.gs.rpc.serializer.Serializer;
 import com.gs.rpc.serializer.SerializerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -26,6 +27,7 @@ import java.util.List;
  * @author: lydms
  * @create: 2024-04-02 15:03
  **/
+@Slf4j
 public class ServiceProxy implements InvocationHandler{
 
     /**
@@ -39,12 +41,13 @@ public class ServiceProxy implements InvocationHandler{
         // 指定序列化器
         // Serializer serializer = new JdkSerializer();  // 硬编码指定序列化器
 
-        // 采用动态代理加载配置类的序列化器
+        // 采用动态代理加载配置类application.properties中的的序列化器
         final Serializer serializer = SerializerFactory.getInstance(RpcApplication.getRpcConfig().getSerializer());
-        System.out.println("代理序列化器："+serializer.getClass());
+        log.info("客户端代理序列化器{}"+serializer.getClass());
 
 
         // 构造请求RpcReq,RPC的输入输出都是RPC形式
+        String serviceName = method.getDeclaringClass().getName();  // com.gs.example.common.service.UserService
         RpcRequest rpcRequest = RpcRequest.builder()
                 .serviceName(method.getDeclaringClass().getName())
                 .methodName(method.getName())
@@ -59,10 +62,11 @@ public class ServiceProxy implements InvocationHandler{
             // 从注册中心获取服务提供者请求地址
             RpcConfig rpcConfig = RpcApplication.getRpcConfig();
             Registry registry = RegistryFactory.getInstance(rpcConfig.getRegistryConfig().getRegistry());
+
             ServiceMetaInfo serviceMetaInfo = new ServiceMetaInfo();
-            serviceMetaInfo.setServiceName(rpcConfig.getName());
+            serviceMetaInfo.setServiceName(serviceName);
             serviceMetaInfo.setServiceVersion(RpcConstant.DEFAULT_SERVICE_VERSION);
-            System.out.println("服务注册元信息："+serviceMetaInfo);
+            // System.out.println("serviceKey="+serviceMetaInfo.getServiceKey());
             List<ServiceMetaInfo> serviceMetaInfoList = registry.serviceDiscovery(serviceMetaInfo.getServiceKey());
             if (CollUtil.isEmpty(serviceMetaInfoList)) {
                 throw new RuntimeException("暂无服务地址");
@@ -75,7 +79,9 @@ public class ServiceProxy implements InvocationHandler{
             // 发送请求
             // 将构造的的RpcReq进行发送到服务器并获取返回结果
             //TODO: 地址被硬编码，注册中心和服务发现机制解决
-            try (HttpResponse httpResponse = HttpRequest.post("http://localhost:8080")
+
+            // 注册中心，存服务和地址kv，客户端去注册中心找到节点信息ServiceMetaInfo后，拿到服务地址去请求
+            try (HttpResponse httpResponse = HttpRequest.post(selectServiceMetaInfo.getServiceAddress())
                     .body(bodyBytes)
                     .execute()) {
 

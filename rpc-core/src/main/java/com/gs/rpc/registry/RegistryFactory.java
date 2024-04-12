@@ -11,7 +11,7 @@ import com.gs.rpc.spi.SpiLoader;
  **/
 public class RegistryFactory {
     static {
-        // 类初始化时通过SPI机制加载
+        // 类初始化时通过SPI机制加载注册中心对象
         SpiLoader.load(Registry.class);
     }
 

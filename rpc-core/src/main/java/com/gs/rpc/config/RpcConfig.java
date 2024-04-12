@@ -32,7 +32,7 @@ public class RpcConfig {
     /**
      * 服务器主机端口
      */
-    private String serverPort = "8080";
+    private Integer serverPort = 8080;
 
     /**
      * 模拟调用
@@ -42,7 +42,7 @@ public class RpcConfig {
     /**
      * 序列化器
      */
-    private String serializer = SerializerKeys.JDK;
+    private String serializer = SerializerKeys.HESSIAN;
 
     /**
      * 注册中心

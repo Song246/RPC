@@ -40,7 +40,7 @@ public interface Registry {
 
 
     /**
-    * 服务发现（获取某服务的所有节点，消费端）
+    * 服务发现（获取某服务的所有节点，消费端,根据服务键名，com.gs.example.common.service.UserService：1.0）
     * @Param: [serviceKey] 服务键名
     * @return: java.util.List<com.gs.rpc.model.ServiceMetaInfo>
     * @Date: 2024/4/10
@@ -48,7 +48,7 @@ public interface Registry {
     List<ServiceMetaInfo> serviceDiscovery(String serviceKey);
 
     /** 
-    * 服务销毁
+    * 注册中心服务销毁
     * @Param: []
     * @return: void
     * @Date: 2024/4/10

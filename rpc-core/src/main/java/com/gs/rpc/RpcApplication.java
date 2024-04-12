@@ -18,6 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RpcApplication {
 
+    /**
+     * 全局配置对象
+     */
     private static volatile RpcConfig rpcConfig;
 
     /**
@@ -29,7 +32,7 @@ public class RpcApplication {
     public static void init(RpcConfig newRpcConfig) {
         rpcConfig = newRpcConfig;
         log.info("rpc init, config={}",newRpcConfig.toString());
-        // 注册中心初始化
+        // 服务端注册中心初始化
         RegistryConfig registryConfig = rpcConfig.getRegistryConfig();
         Registry registry = RegistryFactory.getInstance(registryConfig.getRegistry());
         registry.init(registryConfig);
