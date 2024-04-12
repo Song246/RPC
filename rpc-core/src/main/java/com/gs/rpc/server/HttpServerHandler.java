@@ -12,6 +12,8 @@ import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
+import lombok.extern.slf4j.Slf4j;
+
 import java.lang.reflect.Method;
 
 /**
@@ -21,6 +23,7 @@ import java.lang.reflect.Method;
  * @author: lydms
  * @create: 2024-04-01 21:43
  **/
+@Slf4j
 public class HttpServerHandler implements Handler<HttpServerRequest> {
     /**
      * 业务流程：
@@ -41,9 +44,9 @@ public class HttpServerHandler implements Handler<HttpServerRequest> {
     public void handle(HttpServerRequest request) {
         // 指定序列化器
 //        final Serializer serializer = new JdkSerializer();
-        // TODO：服务器配置的序列化器要和生产者的一致，RpcConfig、application.properties、服务器三者的序列胡器要一致；后续调整服务器不用配置,客户端配置，服务器自适应
+        // TODO：服务器配置的序列化器要和生产者的一致，RpcConfig(服务端读取序列化器类型),application.properties（客户端读取序列化器类型）、服务器三者的序列胡器要一致；后续调整服务器不用配置,客户端配置，服务器自适应
         final Serializer serializer = SerializerFactory.getInstance(RpcApplication.getRpcConfig().getSerializer());
-        System.out.println("Server Handler Serializer"+serializer.getClass().getName());
+        log.info("Server Handler Serializer"+serializer.getClass().getName());
         // 记录日志
         System.out.println("Received request: " + request.method() + " " + request.uri());
 
