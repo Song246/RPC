@@ -1,5 +1,6 @@
 package com.gs.rpc.config;
 
+import com.gs.rpc.registry.Registry;
 import com.gs.rpc.serializer.Serializer;
 import com.gs.rpc.serializer.SerializerKeys;
 import lombok.Data;
@@ -42,5 +43,10 @@ public class RpcConfig {
      * 序列化器
      */
     private String serializer = SerializerKeys.JDK;
+
+    /**
+     * 注册中心
+     */
+    private RegistryConfig registryConfig = new RegistryConfig();
 
 }
