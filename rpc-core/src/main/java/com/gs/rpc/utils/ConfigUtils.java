@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.setting.dialect.Props;
 
 /**
- * 框架配置工具类，读取配置文件并返回配置对象
+ * 框架配置工具类，读取配置文件application.properties并返回配置对象
  * @program: rpc
  * @description:
  * @author: lydms
