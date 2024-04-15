@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.setting.dialect.Props;
 
 /**
- * 框架配置工具类，读取配置文件application.properties并返回配置对象
+ * 框架配置工具类，读取配置文件application.properties并返回配置对象Bean
  * @program: rpc
  * @description:
  * @author: lydms
@@ -13,7 +13,7 @@ import cn.hutool.setting.dialect.Props;
 public class ConfigUtils {
 
     /**
-    * 加载配置对象
+    * 加载配置对象，application.properties -> 配置类Bean对象
     * @Param: [tClass, prefix]
     * @return: T
     * @Date: 2024/4/2
