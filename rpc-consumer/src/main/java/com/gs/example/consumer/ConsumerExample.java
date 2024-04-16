@@ -17,9 +17,9 @@ public class ConsumerExample {
 
     public static void main(String[] args) {
 
-        // 加载配置类，服务器已经先启动进行初始化了
+        // 加载配置类和配置文件，application.properties，(Prop转Bean，若配置文件中没设置属性则使用配置类的默认属性值)
         RpcConfig rpc = ConfigUtils.loadConfig(RpcConfig.class, "rpc");
-        System.out.println("rpc config:"+rpc);
+        System.out.println("rpc consumer config:"+rpc);
 
         // TODO: 需要获取UserService 的实现类对象，通过RPC框架获取到一个支持远程调用服务提供者的的代理对象
 
@@ -27,6 +27,7 @@ public class ConsumerExample {
 //         UserService userService = new UserServiceProxy();
         //动态代理方式调用，代理工厂返回
         UserService userService = ServiceProxyFactory.getProxy(UserService.class);
+
 
 //        System.out.println("userService:"+userService);
         User user = new User();

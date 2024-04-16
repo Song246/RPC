@@ -54,7 +54,7 @@ public class ServiceMetaInfo {
     }
 
     /** 
-    * 获取服务注册节点键名   格式   服务键名/host地址：端口号
+    * 获取服务注册节点键名(节点，包含域名和端口)   格式   服务键名/host地址：端口号
     * @Param: []
     * @return: java.lang.String
     * @Date: 2024/4/10

@@ -31,12 +31,17 @@ public class RpcApplication {
     */
     public static void init(RpcConfig newRpcConfig) {
         rpcConfig = newRpcConfig;
-        log.info("rpc init, config={}",newRpcConfig.toString());
+        log.info("rpc application init, config={}",newRpcConfig);
         // 服务端注册中心初始化
         RegistryConfig registryConfig = rpcConfig.getRegistryConfig();
         Registry registry = RegistryFactory.getInstance(registryConfig.getRegistry());
+        log.info("rpc application init registry init,config={},registry={}",registryConfig,registry);
         registry.init(registryConfig);
-        log.info("registry init,config={}",registryConfig);
+
+
+        // 创建并注册Shutdown Hook，JVM退出时执行操作
+        // 某个服务提供者节点宕机时，应该从注册中心移除掉本机注册的服务，否则会影响消费端调用(消费者从注册中心获取一个下线服务地址进行调用)
+        Runtime.getRuntime().addShutdownHook(new Thread(registry::destroy));
     }
 
     /** 

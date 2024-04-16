@@ -43,7 +43,7 @@ public class HttpServerHandler implements Handler<HttpServerRequest> {
     @Override
     public void handle(HttpServerRequest request) {
         // 指定序列化器
-//        final Serializer serializer = new JdkSerializer();
+        // final Serializer serializer = new JdkSerializer();
         // TODO：服务器配置的序列化器要和生产者的一致，RpcConfig(服务端读取序列化器类型),application.properties（客户端读取序列化器类型）、服务器三者的序列胡器要一致；后续调整服务器不用配置,客户端配置，服务器自适应
         final Serializer serializer = SerializerFactory.getInstance(RpcApplication.getRpcConfig().getSerializer());
         log.info("Server Handler Serializer"+serializer.getClass().getName());
@@ -69,7 +69,7 @@ public class HttpServerHandler implements Handler<HttpServerRequest> {
 
             try {
                 // 获取想要调用的服务实现类，通过反射调用
-                System.out.println("name"+ rpcRequest.getMethodName());
+                System.out.println("HttpServerHandler service name="+ rpcRequest.getMethodName());
                 Class<?> implClass = LocalRegistry.get(rpcRequest.getServiceName());
                 Method method = implClass.getMethod(rpcRequest.getMethodName(), rpcRequest.getParameterTypes());
                 Object result = method.invoke(implClass.newInstance(), rpcRequest.getArgs());
@@ -79,7 +79,7 @@ public class HttpServerHandler implements Handler<HttpServerRequest> {
                 rpcResponse.setMessage("ok");
             } catch (Exception e) {
                 // 封装返回失败的结果
-                e.printStackTrace();
+                log.error("Invoke HttpServerHandler handle error", e);
                 rpcResponse.setMessage(e.getMessage());
                 rpcResponse.setException(e);
             }
@@ -101,7 +101,7 @@ public class HttpServerHandler implements Handler<HttpServerRequest> {
             byte[] serialized = serializer.serialize(rpcResponse);
             httpServerResponse.end(Buffer.buffer(serialized));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("HttpServerHandler Serialize error", e);
             httpServerResponse.end(Buffer.buffer());
         }
         

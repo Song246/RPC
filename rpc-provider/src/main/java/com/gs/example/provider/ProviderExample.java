@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ProviderExample {
     public static void main(String[] args) {
-        // RPC 框架初始化,加载配置文件
+        // RPC 框架初始化,加载配置文件，单例模式
         RpcApplication.init();
 
         // 注册服务   key为接口名称 com.gs.example.common.service.UserService,消费者通过实现类获取val的实现类    val为实现类calss如class com.gs.example.provider.UserServiceImpl
@@ -30,7 +30,7 @@ public class ProviderExample {
         LocalRegistry.register(serviceName, UserServiceImpl.class);
 
         // 注册服务到注册中心
-        RpcConfig rpcConfig = RpcApplication.getRpcConfig();
+        RpcConfig rpcConfig = RpcApplication.getRpcConfig();    // 获取配置文件，配置文件没有就用类的默认值(配置文件类采用单例模式，采用懒加载，配置文件类还没加载就先去加载)
         RegistryConfig registryConfig = rpcConfig.getRegistryConfig();
         Registry registry = RegistryFactory.getInstance(registryConfig.getRegistry());
 
@@ -40,7 +40,7 @@ public class ProviderExample {
         serviceMetaInfo.setServicePort(rpcConfig.getServerPort());
         log.info("serviceMetaInfo:{}",serviceMetaInfo);
         try {
-            registry.register(serviceMetaInfo);
+            registry.register(serviceMetaInfo); // 服务注册，添加到zk/etcd 以及zk/etcd自身的缓存localRegistryNodeKeySet
         } catch (Exception e) {
             throw new RuntimeException("服务注册失败",e);
         }
@@ -48,6 +48,8 @@ public class ProviderExample {
 
         // 启动 服务器
         HttpServer server = new VertxHttpServer();
-        server.doStart(8080);
+        server.doStart(rpcConfig.getServerPort());
+
+
     }
 }

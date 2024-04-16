@@ -59,7 +59,7 @@ public class ServiceProxy implements InvocationHandler{
             // 序列化
             byte[] bodyBytes = serializer.serialize(rpcRequest);
 
-            // 从注册中心获取服务提供者请求地址
+            // 读取配置文件获取注册中心对象，从注册中心获取服务提供者请求地址
             RpcConfig rpcConfig = RpcApplication.getRpcConfig();
             Registry registry = RegistryFactory.getInstance(rpcConfig.getRegistryConfig().getRegistry());
 
@@ -67,7 +67,8 @@ public class ServiceProxy implements InvocationHandler{
             serviceMetaInfo.setServiceName(serviceName);
             serviceMetaInfo.setServiceVersion(RpcConstant.DEFAULT_SERVICE_VERSION);
             // System.out.println("serviceKey="+serviceMetaInfo.getServiceKey());
-            List<ServiceMetaInfo> serviceMetaInfoList = registry.serviceDiscovery(serviceMetaInfo.getServiceKey());
+            // 服务发现，获取注册中心提供的服务，去对应url请求
+            List<ServiceMetaInfo> serviceMetaInfoList = registry. serviceDiscovery(serviceMetaInfo.getServiceKey());
             if (CollUtil.isEmpty(serviceMetaInfoList)) {
                 throw new RuntimeException("暂无服务地址");
             }
@@ -79,7 +80,7 @@ public class ServiceProxy implements InvocationHandler{
             // 发送请求
             // 将构造的的RpcReq进行发送到服务器并获取返回结果
             //TODO: 地址被硬编码，注册中心和服务发现机制解决
-
+            System.out.println("client invoke url: " +selectServiceMetaInfo.getServiceAddress());
             // 注册中心，存服务和地址kv，客户端去注册中心找到节点信息ServiceMetaInfo后，拿到服务地址去请求
             try (HttpResponse httpResponse = HttpRequest.post(selectServiceMetaInfo.getServiceAddress())
                     .body(bodyBytes)
