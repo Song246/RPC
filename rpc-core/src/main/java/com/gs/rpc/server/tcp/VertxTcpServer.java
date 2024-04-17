@@ -32,50 +32,39 @@ public class VertxTcpServer implements HttpServer {
 
         // 处理请求
         server.connectHandler(socket -> {
-                String testMessage = "hello, server!hello, server!hello, server!hello, server!";
-                int messageLength = testMessage.getBytes().length;
 
                 // Vert框架，内置RecordParser完美解决半包粘包问题，它的作用：保证下次读取到特定长度的字符
                 // 构造parser
-                RecordParser parser = RecordParser.newFixed(messageLength); // 为Parser指定每次读取固定值长度的内容
+                RecordParser parser = RecordParser.newFixed(8); // 为Parser指定每次读取固定值长度的内容(消息头固定)
                 parser.setOutput(new Handler<Buffer>() {
+                    // 初始化
+                    int size = -1;
+                    // 一次完整的读取（头(头中记录信息体的长度)+体）
+                    Buffer resultBuffer = Buffer.buffer();
+
+
                     @Override
                     public void handle(Buffer buffer) {
-                        String str = new String(buffer.getBytes());
-                        System.out.println(str);
-                        if (testMessage.equals(str)) {
-                            System.out.println("good");
+                        if (size == -1) {
+                            // 读取消息体长度
+                            size = buffer.getInt(4);
+                            parser.fixedSizeMode(size); // 信息体长度不固定
+                            // 写入头信息到结果
+                            resultBuffer.appendBuffer(buffer);  // 写入定长头信息
+                        } else {
+                            // 写入体信息到结果
+                            resultBuffer.appendBuffer(buffer);  // 写入size大小的信息体body
+                            System.out.println("体信息="+resultBuffer.toString());
+                            // 重置一轮
+                            parser.fixedSizeMode(8);
+                            size = -1;
+                            resultBuffer = Buffer.buffer();
                         }
-
                     }
                 });
                 socket.handler(parser);
 
 
-// 不使用 RecodeParser 半包、粘包演示
-//                if(buffer.getBytes().length<messageLength) {
-//                    System.out.println("半包，length="+buffer.getBytes().length);
-//                    return;
-//                }
-//
-//                if(buffer.getBytes().length>messageLength) {
-//                    System.out.println("粘包，length="+buffer.getBytes().length);
-//                    return;
-//                }
-//                String str = new String(buffer.getBytes(0,messageLength));
-//                System.out.println(str);
-//                if (testMessage.equals(str)) {
-//                    System.out.println("");
-//                }
-
-
-//                // 处理收到的字节数组
-//                byte[] requestData = buffer.getBytes();
-//                // 在这里进行自定义的字节数组处理逻辑，比如解析请求、调用服务、构造响应等
-//                byte[] responseData = handleRequest(requestData);
-//
-//                // 发送响应
-//                socket.write(Buffer.buffer(responseData));  // 向连接到服务器的客户端发送数据，发送格式为BUffer，这是Vertx服务器为我们提供的字节数组缓冲区实现
             });
 
         // 启动TCP 服务器并监听端口
