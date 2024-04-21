@@ -68,4 +68,12 @@ public class RegistryTest {
         Assert.assertNotNull(serviceMetaInfoList);
     }
 
+    @Test
+    public void heartBeat() throws Exception {
+        // init 方法中已经执行了心跳检测机制
+        register();
+        // 阻塞住，注册中心的服务会实现续约
+        Thread.sleep(60 * 1000L);
+    }
+
 }

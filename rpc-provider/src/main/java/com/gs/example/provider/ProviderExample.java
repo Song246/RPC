@@ -10,6 +10,7 @@ import com.gs.rpc.registry.Registry;
 import com.gs.rpc.registry.RegistryFactory;
 import com.gs.rpc.server.HttpServer;
 import com.gs.rpc.server.VertxHttpServer;
+import com.gs.rpc.server.tcp.VertxTcpServer;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -46,9 +47,14 @@ public class ProviderExample {
         }
 
 
-        // 启动 服务器
-        HttpServer server = new VertxHttpServer();
+        // 启动 HTTP 服务器
+//         HttpServer server = new VertxHttpServer();
+//        server.doStart(rpcConfig.getServerPort());
+
+        // 启动TCP服务器
+        VertxTcpServer server = new VertxTcpServer();
         server.doStart(rpcConfig.getServerPort());
+//
 
 
     }

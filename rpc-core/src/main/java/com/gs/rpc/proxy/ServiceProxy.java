@@ -1,6 +1,7 @@
 package com.gs.rpc.proxy;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.gs.rpc.RpcApplication;
@@ -9,16 +10,24 @@ import com.gs.rpc.constant.RpcConstant;
 import com.gs.rpc.model.RpcRequest;
 import com.gs.rpc.model.RpcResponse;
 import com.gs.rpc.model.ServiceMetaInfo;
+import com.gs.rpc.protocol.*;
 import com.gs.rpc.registry.Registry;
 import com.gs.rpc.registry.RegistryFactory;
 import com.gs.rpc.serializer.JdkSerializer;
 import com.gs.rpc.serializer.Serializer;
 import com.gs.rpc.serializer.SerializerFactory;
+import com.gs.rpc.server.tcp.VertxTcpClient;
+import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
+import io.vertx.core.net.NetClient;
+import io.vertx.core.net.NetSocket;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 动态服务代理（JDK动态代理）
@@ -68,7 +77,7 @@ public class ServiceProxy implements InvocationHandler{
             serviceMetaInfo.setServiceVersion(RpcConstant.DEFAULT_SERVICE_VERSION);
             // System.out.println("serviceKey="+serviceMetaInfo.getServiceKey());
             // 服务发现，获取注册中心提供的服务，去对应url请求
-            List<ServiceMetaInfo> serviceMetaInfoList = registry. serviceDiscovery(serviceMetaInfo.getServiceKey());
+            List<ServiceMetaInfo> serviceMetaInfoList = registry.serviceDiscovery(serviceMetaInfo.getServiceKey());
             if (CollUtil.isEmpty(serviceMetaInfoList)) {
                 throw new RuntimeException("暂无服务地址");
             }
@@ -77,26 +86,35 @@ public class ServiceProxy implements InvocationHandler{
             //  TODO:从注册中心获取到的服务节点地址可能多个，暂时先取第一个
             ServiceMetaInfo selectServiceMetaInfo = serviceMetaInfoList.get(0);
 
-            // 发送请求
-            // 将构造的的RpcReq进行发送到服务器并获取返回结果
-            //TODO: 地址被硬编码，注册中心和服务发现机制解决
-            System.out.println("client invoke url: " +selectServiceMetaInfo.getServiceAddress());
-            // 注册中心，存服务和地址kv，客户端去注册中心找到节点信息ServiceMetaInfo后，拿到服务地址去请求
-            try (HttpResponse httpResponse = HttpRequest.post(selectServiceMetaInfo.getServiceAddress())
-                    .body(bodyBytes)
-                    .execute()) {
+            // 通过Vert 的Tcp 服务器进行请求，发送TCP 请求
+            RpcResponse rpcResponse = VertxTcpClient.doRequest(rpcRequest,selectServiceMetaInfo);
+            System.out.println(rpcResponse);
+            return rpcResponse.getData();
 
-                // 获取响应的数据
-                byte[] result = httpResponse.bodyBytes();
-                // 反序列化
-                RpcResponse rpcResponse = serializer.deserialize(result, RpcResponse.class);
-                return rpcResponse.getData();
-            }
+
+
+//            // 下面为HTTP 协议的流程
+//
+//            // 将构造的的RpcReq进行发送到服务器并获取返回结果
+//            //TODO: 地址被硬编码，注册中心和服务发现机制解决
+//            System.out.println("client invoke url: " +selectServiceMetaInfo.getServiceAddress());
+//            // 注册中心，存服务和地址kv，客户端去注册中心找到节点信息ServiceMetaInfo后，拿到服务地址去请求
+//            try (HttpResponse httpResponse = HttpRequest.post(selectServiceMetaInfo.getServiceAddress())
+//                    .body(bodyBytes)
+//                    .execute()) {
+//
+//                // 获取响应的数据
+//                byte[] result = httpResponse.bodyBytes();
+//                // 反序列化
+//                RpcResponse rpcResponse = serializer.deserialize(result, RpcResponse.class);
+//                return rpcResponse.getData();
+//            }
+
 
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException("调用服务失败");
         }
 
-        return null;
     }
 }
