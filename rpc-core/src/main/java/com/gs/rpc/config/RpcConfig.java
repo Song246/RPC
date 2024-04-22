@@ -1,5 +1,6 @@
 package com.gs.rpc.config;
 
+import com.gs.rpc.fault.retry.RetryStrategyKeys;
 import com.gs.rpc.loadbalancer.LoadBalancerKeys;
 import com.gs.rpc.registry.Registry;
 import com.gs.rpc.serializer.Serializer;
@@ -54,5 +55,10 @@ public class RpcConfig {
      * 负载均衡器
      */
     private String loadBalancer = LoadBalancerKeys.CONSISTENT_HASH;
+
+    /**
+     * 重试策略
+     */
+    private String retryStrategy = RetryStrategyKeys.NO;
 
 }

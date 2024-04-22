@@ -7,6 +7,8 @@ import cn.hutool.http.HttpResponse;
 import com.gs.rpc.RpcApplication;
 import com.gs.rpc.config.RpcConfig;
 import com.gs.rpc.constant.RpcConstant;
+import com.gs.rpc.fault.retry.RetryStrategy;
+import com.gs.rpc.fault.retry.RetryStrategyFactory;
 import com.gs.rpc.loadbalancer.LoadBalancer;
 import com.gs.rpc.loadbalancer.LoadBalancerFactory;
 import com.gs.rpc.model.RpcRequest;
@@ -94,8 +96,15 @@ public class ServiceProxy implements InvocationHandler{
             requestParams.put("methodName",rpcRequest.getMethodName());
             ServiceMetaInfo selectServiceMetaInfo = loadBalancer.select(requestParams, serviceMetaInfoList);
 
-            // 通过Vert 的Tcp 服务器进行请求，发送TCP 请求
-            RpcResponse rpcResponse = VertxTcpClient.doRequest(rpcRequest,selectServiceMetaInfo);
+            // rpc请求
+            // 使用重试机制
+            // TODO: 更多重试策略的实现，指数退避算法实现器
+            RetryStrategy retryStrategy = RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy());
+            RpcResponse rpcResponse =retryStrategy.doRetry(()->
+                // 通过Vert 的Tcp 服务器进行请求，发送TCP 请求
+                VertxTcpClient.doRequest(rpcRequest,selectServiceMetaInfo)
+            );
+
             System.out.println(rpcResponse);
             return rpcResponse.getData();
 
