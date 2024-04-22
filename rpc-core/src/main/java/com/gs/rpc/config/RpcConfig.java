@@ -1,6 +1,7 @@
 package com.gs.rpc.config;
 
 import com.gs.rpc.fault.retry.RetryStrategyKeys;
+import com.gs.rpc.fault.tolerant.TolerantStrategyKeys;
 import com.gs.rpc.loadbalancer.LoadBalancerKeys;
 import com.gs.rpc.registry.Registry;
 import com.gs.rpc.serializer.Serializer;
@@ -60,5 +61,10 @@ public class RpcConfig {
      * 重试策略
      */
     private String retryStrategy = RetryStrategyKeys.NO;
+
+    /**
+     * 容错策略
+     */
+    private String tolerantStrategy = TolerantStrategyKeys.FAIL_FAST;
 
 }

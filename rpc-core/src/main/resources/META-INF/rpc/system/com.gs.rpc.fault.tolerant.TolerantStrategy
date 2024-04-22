@@ -1,0 +1,4 @@
+failBack=com.gs.rpc.fault.tolerant.FailBackTolerantStrategy
+failFast=com.gs.rpc.fault.tolerant.FailFastTolerantStrategy
+failOver=com.gs.rpc.fault.tolerant.FailOverTolerantStrategy
+failSafe=com.gs.rpc.fault.tolerant.FailSafeTolerantStrategy

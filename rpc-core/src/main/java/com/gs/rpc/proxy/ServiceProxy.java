@@ -9,6 +9,8 @@ import com.gs.rpc.config.RpcConfig;
 import com.gs.rpc.constant.RpcConstant;
 import com.gs.rpc.fault.retry.RetryStrategy;
 import com.gs.rpc.fault.retry.RetryStrategyFactory;
+import com.gs.rpc.fault.tolerant.TolerantStrategy;
+import com.gs.rpc.fault.tolerant.TolerantStrategyFactory;
 import com.gs.rpc.loadbalancer.LoadBalancer;
 import com.gs.rpc.loadbalancer.LoadBalancerFactory;
 import com.gs.rpc.model.RpcRequest;
@@ -99,11 +101,18 @@ public class ServiceProxy implements InvocationHandler{
             // rpc请求
             // 使用重试机制
             // TODO: 更多重试策略的实现，指数退避算法实现器
-            RetryStrategy retryStrategy = RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy());
-            RpcResponse rpcResponse =retryStrategy.doRetry(()->
-                // 通过Vert 的Tcp 服务器进行请求，发送TCP 请求
-                VertxTcpClient.doRequest(rpcRequest,selectServiceMetaInfo)
-            );
+            RpcResponse rpcResponse;
+            try {
+                RetryStrategy retryStrategy = RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy());
+                rpcResponse =retryStrategy.doRetry(()->
+                        // 通过Vert 的Tcp 服务器进行请求，发送TCP 请求
+                        VertxTcpClient.doRequest(rpcRequest,selectServiceMetaInfo)
+                );
+            } catch (Exception e) {
+                // 使用容错策略
+                TolerantStrategy tolerantStrategy = TolerantStrategyFactory.getInstance(rpcConfig.getTolerantStrategy());
+                rpcResponse = tolerantStrategy.doTolerant(null, e);
+            }
 
             System.out.println(rpcResponse);
             return rpcResponse.getData();
