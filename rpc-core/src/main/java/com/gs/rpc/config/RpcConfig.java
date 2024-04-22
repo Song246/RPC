@@ -1,5 +1,6 @@
 package com.gs.rpc.config;
 
+import com.gs.rpc.loadbalancer.LoadBalancerKeys;
 import com.gs.rpc.registry.Registry;
 import com.gs.rpc.serializer.Serializer;
 import com.gs.rpc.serializer.SerializerKeys;
@@ -48,5 +49,10 @@ public class RpcConfig {
      * 注册中心
      */
     private RegistryConfig registryConfig = new RegistryConfig();
+
+    /**
+     * 负载均衡器
+     */
+    private String loadBalancer = LoadBalancerKeys.CONSISTENT_HASH;
 
 }
