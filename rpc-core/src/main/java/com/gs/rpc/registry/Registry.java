@@ -3,9 +3,7 @@ package com.gs.rpc.registry;
 import com.gs.rpc.model.ServiceMetaInfo;
 import com.gs.rpc.config.RegistryConfig;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 /**
