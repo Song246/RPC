@@ -8,7 +8,6 @@ import cn.hutool.json.JSONUtil;
 import com.gs.rpc.model.ServiceMetaInfo;
 import com.gs.rpc.config.RegistryConfig;
 import io.etcd.jetcd.*;
-import io.etcd.jetcd.kv.GetResponse;
 import io.etcd.jetcd.options.GetOption;
 import io.etcd.jetcd.options.PutOption;
 import io.etcd.jetcd.watch.WatchEvent;
@@ -20,8 +19,6 @@ import java.time.Duration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
