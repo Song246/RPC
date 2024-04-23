@@ -1,13 +1,11 @@
 package com.gs.rpc.server;
 
+import com.gs.rpc.registry.LocalRegistry;
+import com.gs.rpc.serializer.SerializerFactory;
 import com.gs.rpc.RpcApplication;
-import com.gs.rpc.config.RpcConfig;
 import com.gs.rpc.model.RpcRequest;
 import com.gs.rpc.model.RpcResponse;
-import com.gs.rpc.registry.LocalRegistry;
-import com.gs.rpc.serializer.JdkSerializer;
 import com.gs.rpc.serializer.Serializer;
-import com.gs.rpc.serializer.SerializerFactory;
 import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerRequest;
