@@ -1,7 +1,6 @@
 package com.gs.rpc.proxy;
 
 import com.gs.rpc.RpcApplication;
-import com.gs.rpc.config.RpcConfig;
 
 import java.lang.reflect.Proxy;
 
