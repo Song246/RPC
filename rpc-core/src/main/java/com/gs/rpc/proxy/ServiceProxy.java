@@ -1,9 +1,6 @@
 package com.gs.rpc.proxy;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.IdUtil;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import com.gs.rpc.RpcApplication;
 import com.gs.rpc.config.RpcConfig;
 import com.gs.rpc.constant.RpcConstant;
@@ -16,26 +13,18 @@ import com.gs.rpc.loadbalancer.LoadBalancerFactory;
 import com.gs.rpc.model.RpcRequest;
 import com.gs.rpc.model.RpcResponse;
 import com.gs.rpc.model.ServiceMetaInfo;
-import com.gs.rpc.protocol.*;
 import com.gs.rpc.registry.Registry;
 import com.gs.rpc.registry.RegistryFactory;
-import com.gs.rpc.serializer.JdkSerializer;
 import com.gs.rpc.serializer.Serializer;
 import com.gs.rpc.serializer.SerializerFactory;
 import com.gs.rpc.server.tcp.VertxTcpClient;
-import io.vertx.core.Vertx;
-import io.vertx.core.buffer.Buffer;
-import io.vertx.core.net.NetClient;
-import io.vertx.core.net.NetSocket;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * 动态服务代理（JDK动态代理）
