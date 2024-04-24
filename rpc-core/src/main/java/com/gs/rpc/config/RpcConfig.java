@@ -3,8 +3,6 @@ package com.gs.rpc.config;
 import com.gs.rpc.fault.retry.RetryStrategyKeys;
 import com.gs.rpc.fault.tolerant.TolerantStrategyKeys;
 import com.gs.rpc.loadbalancer.LoadBalancerKeys;
-import com.gs.rpc.registry.Registry;
-import com.gs.rpc.serializer.Serializer;
 import com.gs.rpc.serializer.SerializerKeys;
 import lombok.Data;
 
