@@ -2,9 +2,6 @@ package com.gs.rpc.serializer;
 
 import com.gs.rpc.spi.SpiLoader;
 
-import java.util.HashMap;
-import java.util.Map;
-
 
 /**
  * 序列化器工厂
