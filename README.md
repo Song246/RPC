@@ -8,8 +8,8 @@
 - rpc-easy：简易rpc框架，仅包含客户端、服务器的调用，不含注册中心等core模块扩展内容
 - rpc-provider：rpc框架服务提供者，在Spring Boot 项目中使用
 - example-springboot-starter：注解驱动的 rpc框架，可在 Spring Boot 项目中快速使用
-- example-springboot-consumer：封装为start后Spring Boot 框架消费者调用流程demo
-- example-springboot-provider：封装为start后Spring Boot 框架服务提供注册服务流程demo
+- example-springboot-consumer：封装为starter后Spring Boot 框架消费者调用流程demo
+- example-springboot-provider：封装为starter后Spring Boot 框架服务提供注册服务流程demo
 
 
 
