@@ -1,0 +1,2 @@
+no=com.gs.rpc.fault.retry.NoRetryStrategy
+fixedInterval=com.gs.rpc.fault.retry.FixedIntervalRetryStrategy
