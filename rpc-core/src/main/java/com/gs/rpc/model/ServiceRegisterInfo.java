@@ -22,7 +22,7 @@ public class ServiceRegisterInfo<T> {
     private String serviceName;
 
     /**
-     * 实现类
+     * 服务实现类
      */
     private Class<? extends T> implClass;
 }

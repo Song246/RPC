@@ -15,7 +15,8 @@ import com.gs.rpc.proxy.ServiceProxyFactory;
 public class ConsumerExample {
 
     public static void main(String[] args) {
-        // 服务消费者初始化
+
+        //消费者启动类直接进行服务消费者初始化
         ConsumerBootstrap.init();
 
         // 获取代理

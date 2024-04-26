@@ -60,7 +60,7 @@ public class ProviderExample {
         ServiceRegisterInfo serviceRegisterInfo = new ServiceRegisterInfo(UserService.class.getName(), UserServiceImpl.class);
         serviceRegistryInfoList.add(serviceRegisterInfo);
 
-        // 服务提供者初始化
+        // 服务提供者启动类直接初始化
         ProviderBootstrap.init(serviceRegistryInfoList);
 
 

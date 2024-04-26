@@ -21,6 +21,13 @@ import java.util.List;
  **/
 public class ProviderBootstrap {
 
+    /**
+    * 服务提供者启动类初始化
+    * @Param: [serviceRegisterInfoList]
+    * @return: void
+    * @Date: 2024/4/26
+    */
+
     public static void init(List<ServiceRegisterInfo<?>> serviceRegisterInfoList) {
 
         // RPC 框架初始化(配置和注册中心),加载配置文件，单例模式

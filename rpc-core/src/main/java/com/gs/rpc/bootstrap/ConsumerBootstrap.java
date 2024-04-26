@@ -18,7 +18,7 @@ public class ConsumerBootstrap {
     * @Date: 2024/4/23
     */
     public static void init() {
-        // RPC框架初始化（配置和注册中心），不需要注册服务也不需要启动web服务器，只需要执行RpcApplication.init完成框架初始化
+        // RPC框架初始化（配置和注册中心），消费者不需要注册服务也不需要启动web服务器，只需要执行RpcApplication.init完成框架初始化
         RpcApplication.init();
     }
 }
