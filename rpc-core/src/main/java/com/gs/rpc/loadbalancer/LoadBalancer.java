@@ -15,7 +15,7 @@ public interface LoadBalancer {
     
     /** 
     * 
-    * @Param: [requestParams, serviceMetaInfoList] 请求参数、可用服务列表
+    * @Param: [requestParams, serviceMetaInfoList] 请求参数、可用服务列表（实现同一服务的实例对象）
     * @return: com.cong.rpc.core.model.ServiceMetaInfo
     * @Date: 2024/4/22
     */

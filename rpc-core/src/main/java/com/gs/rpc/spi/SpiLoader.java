@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
- * SPI 加载器（支持键值对映射）
+ * SPI 加载器（支持键值对映射），仿照SPI源码实现SPI加载机制（通过扫描加反射的方式）
  * @program: rpc
  * @description:
  * @author: lydms
@@ -25,10 +25,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SpiLoader {
 
     /**
-     * 存储已加载的类，接口名=》key=》实现类
+     * 存储已加载的类，key=接口 ,val=接口中不同的实现类；   内部map：jdk=class com.gs.rpc.serializer.JdkSerializer
      * {com.gs.rpc.serializer.Serializer =
-     * {jdk=class com.gs.rpc.serializer.JdkSerializer, hessian=class com.gs.rpc.serializer.HessianSerializer, json=class com.gs.rpc.serializer.JsonSerializer, kryo=class com.gs.rpc.serializer.KryoSerializer}
-     * }
+     * map{jdk=class com.gs.rpc.serializer.JdkSerializer, hessian=class com.gs.rpc.serializer.HessianSerializer, json=class com.gs.rpc.serializer.JsonSerializer, kryo=class com.gs.rpc.serializer.KryoSerializer}}
      */
     private static final Map<String, Map<String,Class<?>>> loaderMap = new ConcurrentHashMap<>();
 
@@ -79,7 +78,7 @@ public class SpiLoader {
     */
     public static <T> T getInstance(Class<?> tClass,String key) {
         String tClassName = tClass.getName();   // getName():获取接口名称，   com.gs.rpc.serializer.Serializer
-        Map<String, Class<?>> keyClassMap = loaderMap.get(tClassName);  //
+        Map<String, Class<?>> keyClassMap = loaderMap.get(tClassName);  // 判断服务类型，Serializer、Registry、RetryStrategy等
         if (keyClassMap == null) {
             throw new RuntimeException(String.format("SpiLoader 未加载的%s类型",tClassName));
         }
