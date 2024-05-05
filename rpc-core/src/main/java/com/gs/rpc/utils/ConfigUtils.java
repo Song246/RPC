@@ -34,6 +34,7 @@ public class ConfigUtils {
             configFileBuilder.append("-").append(environment);
         }
         configFileBuilder.append(".properties");
+        // Hutool 类将属性文件中的键值对映射为Java对象的属性，并不是单例（每次调用都会返回一个对象）
         Props props = new Props(configFileBuilder.toString());
         return props.toBean(tClass,prefix);
     }
