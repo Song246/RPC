@@ -16,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * SPI 加载器（支持键值对映射），仿照SPI源码实现SPI加载机制（通过扫描加反射的方式）
+ * Java自带SPI机制会加载所有的实例，有时候只需要部分实例类，Dubbo中进行了自定义SPI机制
  * @program: rpc
  * @description:
  * @author: lydms

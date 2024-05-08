@@ -33,7 +33,7 @@ public class EtcdRegistry implements Registry {
 
 
     /**
-     * 本机注册的节点Key集合（用户维护续期）
+     * server注册了服务的的注册中心集合（服务提供者在不同注册中心注册，需要在不同注册中心中进行续期，为了能够找到自己在哪些注册中心注册了，所以集合维护自己注册的节点，维护续期）
      */
     private final Set<String> localRegisterNodeKeySet = new HashSet<>();
 
